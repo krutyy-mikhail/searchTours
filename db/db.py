@@ -30,6 +30,7 @@ def get_min_price_tour(tours_on_departure):
 def get_max_price_tour(tours_on_departure):
     return max(_get_values_on_field(tours_on_departure, 'price'))
 
+
 def get_min_night_tour(tours_on_departure):
     return min(_get_values_on_field(tours_on_departure, 'nights'))
 
