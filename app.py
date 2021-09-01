@@ -15,11 +15,18 @@ def index_view():
 @app.route('/departures/<departure>')
 def departure_view(departure):
     tours_on_departure = db.get_tours_on_departure(departure)
-    min_price_tour = db.get_min_price_tour(tours_on_departure)
-    max_price_tour = db.get_max_price_tour(tours_on_departure)
-    min_night_tour = db.get_min_night_tour(tours_on_departure)
-    max_night_tour = db.get_max_night_tour(tours_on_departure)
-    departure_desc = db.get_departure_desc(departure)
+    try:
+        departure_desc = db.get_departure_desc(departure)
+    except KeyError:
+        flask.abort(404)
+    try:
+        min_price_tour = db.get_min_price_tour(tours_on_departure)
+        max_price_tour = db.get_max_price_tour(tours_on_departure)
+        min_night_tour = db.get_min_night_tour(tours_on_departure)
+        max_night_tour = db.get_max_night_tour(tours_on_departure)
+    except ValueError:
+        flask.abort(404)
+
     return render_template('departure.html',
                            tours_on_departure=tours_on_departure,
                            departure=departure,
@@ -33,7 +40,10 @@ def departure_view(departure):
 
 @app.route('/tours/<int:tour_id>/')
 def tour_view(tour_id):
-    tour = db.get_tour(tour_id)
+    try:
+        tour = db.get_tour(tour_id)
+    except KeyError:
+        flask.abort(404)
     str_departure = db.get_str_departure(tour);
     return render_template('tour.html',
                            tour=tour,
